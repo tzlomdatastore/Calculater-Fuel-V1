@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fluid Converter</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#121212">
+    <meta name="theme-color" content="#dcdcdc">
     <style>
         * {
             box-sizing: border-box;
@@ -15,76 +15,64 @@
         }
 
         body {
-            background: linear-gradient(135deg, #1f1f1f 0%, #121212 100%);
-            color: #e0e0e0;
+            /* ငွေရောင် အရောင်ပြေး စတိုင် နောက်ခံ */
+            background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 50%, #bebebe 100%);
+            color: #222222;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
             min-height: 100vh;
-            padding: 15px;
+            padding: 10px 15px;
+            overflow-x: hidden;
         }
 
+        /* အပေါ်ပိုင်းတစ်ဝက်ပဲ နေရာယူမည့် App Container */
         .app-container {
             width: 100%;
             max-width: 420px;
-            background: rgba(30, 30, 30, 0.75);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            padding: 25px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-        }
-
-        h2 {
-            text-align: center;
-            font-size: 1.4rem;
-            font-weight: 400;
-            letter-spacing: 1px;
-            margin-bottom: 25px;
-            color: #ffffff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
         .pwa-badge {
             display: none;
             background: linear-gradient(90deg, #444, #222);
-            color: #00ffcc;
+            color: #ffffff;
             border: 1px solid #555;
             padding: 8px;
             border-radius: 12px;
             text-align: center;
             cursor: pointer;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 255, 255, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(0, 255, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 255, 255, 0); }
+            margin-bottom: 12px;
+            font-size: 0.85rem;
         }
 
         .input-group {
-            background: rgba(40, 40, 40, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 15px;
-            margin-bottom: 18px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 10px 12px;
+            margin-bottom: 10px;
             transition: all 0.3s ease;
         }
 
         .input-group:focus-within {
-            border-color: #888888;
-            box-shadow: 0 0 12px rgba(255,255,255,0.05);
+            border-color: #666666;
+            box-shadow: 0 0 8px rgba(0,0,0,0.08);
         }
 
         .input-label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #8a8a8a;
-            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+            color: #555555;
+            margin-bottom: 3px;
+            font-weight: 600;
         }
 
         .input-row {
@@ -96,104 +84,122 @@
         .input-row input {
             background: transparent;
             border: none;
-            color: #ffffff;
-            font-size: 1.8rem;
-            width: 70%;
+            color: #111111;
+            font-size: 1.5rem;
+            width: 75%;
             outline: none;
-            font-weight: 300;
+            font-weight: 400;
         }
 
         .unit {
-            font-size: 1.1rem;
-            color: #aaaaaa;
-            font-weight: 500;
-            background: rgba(255,255,255,0.05);
-            padding: 4px 12px;
-            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #ffffff;
+            font-weight: 600;
+            background: #333333;
+            padding: 3px 10px;
+            border-radius: 6px;
         }
 
         /* Fixed Price Display */
         .price-display-box {
             text-align: center;
-            padding: 10px;
-            margin-bottom: 18px;
-            background: rgba(255, 255, 255, 0.03);
+            padding: 8px;
+            margin-bottom: 10px;
+            background: #222222;
             border-radius: 12px;
-            border-left: 4px solid #888888;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .price-display-box span {
-            font-size: 0.9rem;
-            color: #8a8a8a;
+            font-size: 0.8rem;
+            color: #aaaaaa;
         }
 
         .price-display-box .current-rate {
-            font-size: 1.4rem;
+            font-size: 1.25rem;
             color: #ffffff;
-            font-weight: 600;
-            margin-left: 10px;
+            font-weight: 700;
+            margin-left: 8px;
         }
 
-        /* Preset Buttons */
+        /* Preset Buttons - (၇) မျိုးဆံ့အောင် ညှိထားပါတယ် */
         .preset-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 18px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-bottom: 10px;
         }
 
         .preset-btn {
-            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-            border: 1px solid rgba(255,255,255,0.05);
-            color: #bbbbbb;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 1rem;
+            background: linear-gradient(145deg, #ffffff, #dddddd);
+            border: 1px solid rgba(0,0,0,0.15);
+            color: #222222;
+            padding: 8px 4px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
+            text-align: center;
         }
 
         .preset-btn.active {
-            background: #ffffff;
-            color: #000000;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(255,255,255,0.2);
+            background: linear-gradient(145deg, #333333, #111111);
+            color: #ffffff;
+            border-color: #000000;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
         }
 
         /* Custom Rate Input */
         .custom-rate-group {
-            background: rgba(20, 20, 20, 0.5);
-            border: 1px solid rgba(255,255,255,0.03);
-            border-radius: 16px;
-            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            padding: 8px 12px;
         }
 
         .custom-rate-group input {
             background: transparent;
             border: none;
-            color: #ffcc00;
-            font-size: 1.2rem;
+            color: #b8860b;
+            font-size: 1.1rem;
             width: 100%;
             outline: none;
-            margin-top: 5px;
-            font-weight: 500;
+            margin-top: 2px;
+            font-weight: 600;
         }
 
         .custom-rate-group input::placeholder {
-            color: #555555;
+            color: #888888;
+        }
+
+        /* အောက်ခြေလွတ်နေသောနေရာတွင် ပြသမည့် စာသားစတိုင် */
+        .brand-footer {
+            margin-top: auto;
+            padding: 30px 0 20px 0;
+            text-align: center;
+        }
+
+        .brand-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(180deg, #444444 0%, #111111 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0px 2px 4px rgba(255,255,255,0.5);
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <h2>SILVER & BLACK CONVERTER</h2>
-
     <div id="installApp" class="pwa-badge">📱 နှိပ်ပြီး ဖုန်းထဲမှာ App အဖြစ် သတ်မှတ်ရန်</div>
 
     <div class="price-display-box">
         <span>လက်ရှိ သတ်မှတ်စျေးနှုန်း:</span>
-        <span class="current-rate" id="currentRateDisplay">၂,၅၀၀ ပ်ာ</span>
+        <span class="current-rate" id="currentRateDisplay">၅,၀၀၀ ကျပ်</span>
     </div>
 
     <div class="input-group">
@@ -212,53 +218,55 @@
         </div>
     </div>
 
-    <div class="input-label" style="margin-bottom: 8px;">သတ်မှတ်ပြီးသား နှုန်းထားများ</div>
+    <div class="input-label" style="margin-bottom: 5px; color: #444;">သတ်မှတ်ပြီးသား နှုန်းထားများ</div>
     <div class="preset-grid">
-        <button class="preset-btn active" onclick="setPrice(2500, this)">2500</button>
-        <button class="preset-btn" onclick="setPrice(2800, this)">2800</button>
-        <button class="preset-btn" onclick="setPrice(3000, this)">3000</button>
+        <button class="preset-btn active" onclick="setPrice(5000, this)">5000</button>
+        <button class="preset-btn" onclick="setPrice(5500, this)">5500</button>
+        <button class="preset-btn" onclick="setPrice(6000, this)">6000</button>
+        <button class="preset-btn" onclick="setPrice(6500, this)">6500</button>
+        <button class="preset-btn" onclick="setPrice(7000, this)">7000</button>
+        <button class="preset-btn" onclick="setPrice(7500, this)">7500</button>
+        <button class="preset-btn" onclick="setPrice(8000, this)">8000</button>
     </div>
 
     <div class="custom-rate-group">
-        <div class="input-label" style="color: #ffcc00;">သတ်မှတ်ရန် (စိတ်ကြိုက် စျေးနှုန်းရိုက်ထည့်ရန်)</div>
+        <div class="input-label" style="color: #8b6508;">သတ်မှတ်ရန် (စိတ်ကြိုက် စျေးနှုန်း)</div>
         <input type="number" id="customPriceInput" placeholder="စျေးနှုန်း အသစ်ရိုက်ထည့်ပါ...">
     </div>
 </div>
 
+<div class="brand-footer">
+    <div class="brand-text">TZLOM & Gemini</div>
+</div>
+
 <script>
-    let activePrice = 2500;
+    let activePrice = 5000;
     const literInput = document.getElementById('literInput');
     const amountInput = document.getElementById('amountInput');
     const customPriceInput = document.getElementById('customPriceInput');
     const currentRateDisplay = document.getElementById('currentRateDisplay');
 
-    // စျေးနှုန်းအသေများကို ရွေးချယ်ခြင်း
     function setPrice(price, element) {
         activePrice = price;
-        customPriceInput.value = ''; // Custom အကွက်ကို ရှင်းထုတ်မယ်
+        customPriceInput.value = ''; 
         currentRateDisplay.innerText = price.toLocaleString() + " ကျပ်";
         
-        // Active Button အရောင်ပြောင်းလဲခြင်း
         document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
         if(element) element.classList.add('active');
         
-        // နှုန်းထားအသစ်နဲ့ ပြန်တွက်ချက်ခြင်း
         recalculate('liter');
     }
 
-    // စိတ်ကြိုက်စျေးနှုန်း ရိုက်ထည့်ခြင်း
     customPriceInput.addEventListener('input', () => {
         let val = parseFloat(customPriceInput.value);
         if (val > 0) {
             activePrice = val;
             currentRateDisplay.innerText = val.toLocaleString() + " ကျပ်";
-            // စျေးနှုန်းအသေခလုတ်တွေရဲ့ Active အရောင်ကို ဖြုတ်မယ်
             document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
             recalculate('liter');
         }
     });
 
-    // အပြန်အလှန် တွက်ချက်မှု Logic
     literInput.addEventListener('input', () => recalculate('liter'));
     amountInput.addEventListener('input', () => recalculate('amount'));
 
@@ -268,7 +276,6 @@
         if (source === 'liter') {
             let liters = parseFloat(literInput.value);
             if (!isNaN(liters)) {
-                // သင့်ငွေ = လီတာ * စျေးနှုန်း (ဒဿမ မယူပါ)
                 amountInput.value = Math.round(liters * activePrice);
             } else {
                 amountInput.value = '';
@@ -276,7 +283,6 @@
         } else if (source === 'amount') {
             let amount = parseFloat(amountInput.value);
             if (!isNaN(amount)) {
-                // လီတာ = သင့်ငွေ / စျေးနှုန်း (ဒဿမ ၃ လုံး ယူပါသည်)
                 let calculatedLiter = amount / activePrice;
                 literInput.value = calculatedLiter.toFixed(3);
             } else {
@@ -285,7 +291,6 @@
         }
     }
 
-    // --- PWA Service Worker Registration ---
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js')
@@ -294,14 +299,13 @@
         });
     }
 
-    // --- Install Banner Prompt Logic ---
     let deferredPrompt;
     const installBtn = document.getElementById('installApp');
 
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        installBtn.style.display = 'block'; // Install ခလုတ်ကို ဖော်ပြမယ်
+        installBtn.style.display = 'block'; 
     });
 
     installBtn.addEventListener('click', () => {
@@ -309,7 +313,6 @@
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then((choiceResult) => {
                 if (choiceResult.outcome === 'accepted') {
-                    console.log('User accepted the install prompt');
                     installBtn.style.display = 'none';
                 }
                 deferredPrompt = null;
