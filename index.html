@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluid Converter</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#121212">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1f1f1f 0%, #121212 100%);
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(30, 30, 30, 0.75);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .pwa-badge {
+            display: none;
+            background: linear-gradient(90deg, #444, #222);
+            color: #00ffcc;
+            border: 1px solid #555;
+            padding: 8px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 255, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 255, 0); }
+        }
+
+        .input-group {
+            background: rgba(40, 40, 40, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .input-group:focus-within {
+            border-color: #888888;
+            box-shadow: 0 0 12px rgba(255,255,255,0.05);
+        }
+
+        .input-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8a8a8a;
+            margin-bottom: 5px;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .input-row input {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 1.8rem;
+            width: 70%;
+            outline: none;
+            font-weight: 300;
+        }
+
+        .unit {
+            font-size: 1.1rem;
+            color: #aaaaaa;
+            font-weight: 500;
+            background: rgba(255,255,255,0.05);
+            padding: 4px 12px;
+            border-radius: 8px;
+        }
+
+        /* Fixed Price Display */
+        .price-display-box {
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border-left: 4px solid #888888;
+        }
+
+        .price-display-box span {
+            font-size: 0.9rem;
+            color: #8a8a8a;
+        }
+
+        .price-display-box .current-rate {
+            font-size: 1.4rem;
+            color: #ffffff;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        /* Preset Buttons */
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .preset-btn {
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            border: 1px solid rgba(255,255,255,0.05);
+            color: #bbbbbb;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .preset-btn.active {
+            background: #ffffff;
+            color: #000000;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255,255,255,0.2);
+        }
+
+        /* Custom Rate Input */
+        .custom-rate-group {
+            background: rgba(20, 20, 20, 0.5);
+            border: 1px solid rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 12px 15px;
+        }
+
+        .custom-rate-group input {
+            background: transparent;
+            border: none;
+            color: #ffcc00;
+            font-size: 1.2rem;
+            width: 100%;
+            outline: none;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .custom-rate-group input::placeholder {
+            color: #555555;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <h2>SILVER & BLACK CONVERTER</h2>
+
+    <div id="installApp" class="pwa-badge">📱 နှိပ်ပြီး ဖုန်းထဲမှာ App အဖြစ် သတ်မှတ်ရန်</div>
+
+    <div class="price-display-box">
+        <span>လက်ရှိ သတ်မှတ်စျေးနှုန်း:</span>
+        <span class="current-rate" id="currentRateDisplay">၂,၅၀၀ ပ်ာ</span>
+    </div>
+
+    <div class="input-group">
+        <div class="input-label">လီတာ အရေအတွက် (Liters)</div>
+        <div class="input-row">
+            <input type="number" id="literInput" placeholder="0.000" step="0.001">
+            <span class="unit">Li</span>
+        </div>
+    </div>
+
+    <div class="input-group">
+        <div class="input-label">သင့်ငွေ (Amount)</div>
+        <div class="input-row">
+            <input type="number" id="amountInput" placeholder="0">
+            <span class="unit">Ks</span>
+        </div>
+    </div>
+
+    <div class="input-label" style="margin-bottom: 8px;">သတ်မှတ်ပြီးသား နှုန်းထားများ</div>
+    <div class="preset-grid">
+        <button class="preset-btn active" onclick="setPrice(2500, this)">2500</button>
+        <button class="preset-btn" onclick="setPrice(2800, this)">2800</button>
+        <button class="preset-btn" onclick="setPrice(3000, this)">3000</button>
+    </div>
+
+    <div class="custom-rate-group">
+        <div class="input-label" style="color: #ffcc00;">သတ်မှတ်ရန် (စိတ်ကြိုက် စျေးနှုန်းရိုက်ထည့်ရန်)</div>
+        <input type="number" id="customPriceInput" placeholder="စျေးနှုန်း အသစ်ရိုက်ထည့်ပါ...">
+    </div>
+</div>
+
+<script>
+    let activePrice = 2500;
+    const literInput = document.getElementById('literInput');
+    const amountInput = document.getElementById('amountInput');
+    const customPriceInput = document.getElementById('customPriceInput');
+    const currentRateDisplay = document.getElementById('currentRateDisplay');
+
+    // စျေးနှုန်းအသေများကို ရွေးချယ်ခြင်း
+    function setPrice(price, element) {
+        activePrice = price;
+        customPriceInput.value = ''; // Custom အကွက်ကို ရှင်းထုတ်မယ်
+        currentRateDisplay.innerText = price.toLocaleString() + " ကျပ်";
+        
+        // Active Button အရောင်ပြောင်းလဲခြင်း
+        document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+        if(element) element.classList.add('active');
+        
+        // နှုန်းထားအသစ်နဲ့ ပြန်တွက်ချက်ခြင်း
+        recalculate('liter');
+    }
+
+    // စိတ်ကြိုက်စျေးနှုန်း ရိုက်ထည့်ခြင်း
+    customPriceInput.addEventListener('input', () => {
+        let val = parseFloat(customPriceInput.value);
+        if (val > 0) {
+            activePrice = val;
+            currentRateDisplay.innerText = val.toLocaleString() + " ကျပ်";
+            // စျေးနှုန်းအသေခလုတ်တွေရဲ့ Active အရောင်ကို ဖြုတ်မယ်
+            document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+            recalculate('liter');
+        }
+    });
+
+    // အပြန်အလှန် တွက်ချက်မှု Logic
+    literInput.addEventListener('input', () => recalculate('liter'));
+    amountInput.addEventListener('input', () => recalculate('amount'));
+
+    function recalculate(source) {
+        if (!activePrice || activePrice <= 0) return;
+
+        if (source === 'liter') {
+            let liters = parseFloat(literInput.value);
+            if (!isNaN(liters)) {
+                // သင့်ငွေ = လီတာ * စျေးနှုန်း (ဒဿမ မယူပါ)
+                amountInput.value = Math.round(liters * activePrice);
+            } else {
+                amountInput.value = '';
+            }
+        } else if (source === 'amount') {
+            let amount = parseFloat(amountInput.value);
+            if (!isNaN(amount)) {
+                // လီတာ = သင့်ငွေ / စျေးနှုန်း (ဒဿမ ၃ လုံး ယူပါသည်)
+                let calculatedLiter = amount / activePrice;
+                literInput.value = calculatedLiter.toFixed(3);
+            } else {
+                literInput.value = '';
+            }
+        }
+    }
+
+    // --- PWA Service Worker Registration ---
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('Service Worker Registered'))
+            .catch(err => console.log('Service Worker Failed', err));
+        });
+    }
+
+    // --- Install Banner Prompt Logic ---
+    let deferredPrompt;
+    const installBtn = document.getElementById('installApp');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.style.display = 'block'; // Install ခလုတ်ကို ဖော်ပြမယ်
+    });
+
+    installBtn.addEventListener('click', () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                    installBtn.style.display = 'none';
+                }
+                deferredPrompt = null;
+            });
+        }
+    });
+</script>
+</body>
+</html>
