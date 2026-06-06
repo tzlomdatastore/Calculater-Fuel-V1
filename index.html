@@ -2,161 +2,125 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluid Converter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Calcu Note</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#dcdcdc">
+    <meta name="theme-color" content="#28a745">
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: background 0.3s ease, color 0.3s ease;
         }
 
-        :root {
-            --bg-gradient: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 50%, #bebebe 100%);
-            --container-bg: rgba(255, 255, 255, 0.65);
-            --card-border: rgba(255, 255, 255, 0.5);
-            --text-color: #222222;
-            --input-bg: rgba(255, 255, 255, 0.8);
-            --input-border: rgba(0, 0, 0, 0.1);
-            --rate-box-bg: #222222;
-            --rate-box-text: #ffffff;
-        }
-
-        [data-theme="dark"] {
-            --bg-gradient: linear-gradient(135deg, #121212 0%, #1e1e1e 50%, #2c2c2c 100%);
-            --container-bg: rgba(30, 30, 30, 0.65);
-            --card-border: rgba(255, 255, 255, 0.1);
-            --text-color: #e0e0e0;
-            --input-bg: rgba(50, 50, 50, 0.8);
-            --input-border: rgba(255, 255, 255, 0.1);
-            --rate-box-bg: #333333;
-            --rate-box-text: #00ffcc;
+        html, body {
+            height: 100%;
+            overflow: hidden; /* ကီးဘုတ်တက်လာလျှင် screen မရွေ့စေရန် */
         }
 
         body {
-            background: var(--bg-gradient);
-            color: var(--text-color);
+            background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 50%, #bebebe 100%);
+            color: #222222;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
             padding: 10px 15px;
-            overflow-x: hidden;
-        }
-
-        .header-actions {
-            display: flex;
-            justify-content: flex-end;
-            max-width: 420px;
-            width: 100%;
-            margin: 0 auto 10px auto;
-        }
-
-        .theme-btn {
-            background: var(--input-bg);
-            border: 1px solid var(--input-border);
-            color: var(--text-color);
-            padding: 6px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
         }
 
         .app-container {
             width: 100%;
             max-width: 420px;
             margin: 0 auto;
-            background: var(--container-bg);
+            background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--card-border);
+            border: 1px solid rgba(255, 255, 255, 0.5);
             border-radius: 20px;
             padding: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
         }
 
         .pwa-badge {
             display: none;
-            background: linear-gradient(90deg, #444, #222);
-            color: #ffffff;
-            border: 1px solid #555;
+            background: #222;
+            color: #fff;
             padding: 8px;
             border-radius: 12px;
             text-align: center;
             cursor: pointer;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             font-size: 0.85rem;
         }
 
-        .input-group {
-            background: var(--input-bg);
-            border: 1px solid var(--input-border);
-            border-radius: 12px;
-            padding: 10px 12px;
+        /* အစိမ်းရောင်ပြောင်းထားသော လက်ရှိနှုန်းထားပြကွက် */
+        .price-display-box {
+            text-align: center;
+            padding: 10px;
             margin-bottom: 10px;
+            background: #28a745;
+            border-radius: 12px;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             position: relative;
         }
 
-        .input-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-color);
-            margin-bottom: 3px;
-            font-weight: 600;
-            opacity: 0.8;
-        }
-
-        .input-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .input-row input {
-            background: transparent;
-            border: none;
-            color: var(--text-color);
-            font-size: 1.5rem;
-            width: 75%;
-            outline: none;
-            font-weight: 400;
-        }
-
-        .unit {
-            font-size: 0.9rem;
-            color: #ffffff;
-            font-weight: 600;
-            background: #333333;
-            padding: 3px 10px;
-            border-radius: 6px;
-        }
-
-        .price-display-box {
-            text-align: center;
-            padding: 8px;
-            margin-bottom: 10px;
-            background: var(--rate-box-bg);
-            border-radius: 12px;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .price-display-box span {
-            font-size: 0.8rem;
-            color: #aaaaaa;
-        }
-
+        .price-display-box span { font-size: 0.85rem; opacity: 0.9; }
         .price-display-box .current-rate {
-            font-size: 1.25rem;
-            color: var(--rate-box-text);
+            font-size: 1.4rem;
             font-weight: 700;
             margin-left: 8px;
         }
 
+        .edit-preset-toggle {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        /* လီတာ နှင့် သင့်ငွေ ဘေးချင်းကပ်တန်း */
+        .row-inputs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .input-group {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            border-radius: 12px;
+            padding: 8px 10px;
+        }
+
+        .input-label {
+            font-size: 0.75rem;
+            color: #555555;
+            margin-bottom: 2px;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            background: transparent;
+            border: none;
+            color: #111111;
+            font-size: 1.3rem;
+            width: 100%;
+            outline: none;
+            font-weight: 600;
+        }
+
+        /* Preset ကွက်များ */
         .preset-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -168,7 +132,7 @@
             background: linear-gradient(145deg, #ffffff, #dddddd);
             border: 1px solid rgba(0,0,0,0.15);
             color: #222222;
-            padding: 8px 4px;
+            padding: 8px 2px;
             border-radius: 8px;
             font-size: 0.85rem;
             font-weight: 600;
@@ -177,17 +141,43 @@
         }
 
         .preset-btn.active {
-            background: linear-gradient(145deg, #333333, #111111);
+            background: #222222;
             color: #ffffff;
             border-color: #000000;
         }
 
-        .custom-rate-group {
-            background: var(--input-bg);
-            border: 1px solid var(--input-border);
-            border-radius: 12px;
-            padding: 8px 12px;
+        /* နှုန်းထားပြင်ဆင်ရန် နေရာဝှက် */
+        .preset-edit-panel {
+            display: none;
+            background: rgba(0,0,0,0.05);
+            padding: 8px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+        }
+        .preset-edit-panel input {
+            width: 100%;
+            padding: 4px;
+            font-size: 0.8rem;
+            text-align: center;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        /* စိတ်ကြိုက်စျေးနှုန်းနှင့် QR ကွက် */
+        .custom-rate-row {
+            display: flex;
+            gap: 8px;
             margin-bottom: 12px;
+        }
+
+        .custom-rate-group {
+            width: 66.66%; /* ၃ ပုံ ၂ ပုံ အလျား */
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            padding: 6px 10px;
         }
 
         .custom-rate-group input {
@@ -197,139 +187,275 @@
             font-size: 1.1rem;
             width: 100%;
             outline: none;
-            margin-top: 2px;
             font-weight: 600;
         }
 
-        /* Action Buttons (Clear & Save) */
-        .action-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .action-btn {
-            padding: 10px;
-            border-radius: 10px;
+        .qr-btn {
+            width: 33.33%;
+            background: #555555;
+            color: white;
             border: none;
-            font-weight: 600;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
             cursor: pointer;
-            font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
         }
 
-        .clear-btn { background: #ff4d4d; color: white; }
-        .save-btn { background: #28a745; color: white; }
+        .qr-btn.active {
+            background: #007bff;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
+        }
 
-        /* History Panel */
-        .history-box {
-            background: var(--input-bg);
-            border: 1px solid var(--input-border);
+        /* သတ်မှတ်ခလုတ်အရှည် */
+        .save-btn {
+            width: 100%;
+            padding: 12px;
+            background: #28a745;
+            color: white;
+            border: none;
             border-radius: 12px;
-            padding: 10px;
-            max-height: 120px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 10px rgba(40,167,69,0.2);
+        }
+
+        /* မှတ်တမ်းဇယား */
+        .history-section {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            min-height: 150px;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 1.5fr 2fr 2.5fr 2fr;
+            padding: 6px 4px;
+            background: rgba(0,0,0,0.06);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        .history-box {
+            flex-grow: 1;
             overflow-y: auto;
-            font-size: 0.8rem;
+            max-height: 200px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.05);
         }
 
         .history-item {
+            display: grid;
+            grid-template-columns: 1.5fr 2fr 2.5fr 2fr;
+            padding: 8px 4px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            font-size: 0.8rem;
+            text-align: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .history-item:active { background: rgba(0,0,0,0.05); }
+
+        /* Popup Detail Window */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .popup-content {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            width: 85%;
+            max-width: 320px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .popup-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-align: center;
+            color: #333;
+        }
+
+        .popup-row {
             display: flex;
             justify-content: space-between;
-            padding: 4px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 4px;
         }
+
+        .popup-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .pop-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .pop-del { background: #dc3545; color: white; }
+        .pop-close { background: #e0e0e0; color: #333; }
 
         .brand-footer {
-            margin-top: auto;
-            padding: 30px 0 20px 0;
             text-align: center;
-        }
-
-        .brand-text {
-            font-size: 2.2rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            background: linear-gradient(180deg, #444444 0%, #111111 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0px 2px 4px rgba(255,255,255,0.5);
-            opacity: 0.8;
+            padding: 15px 0 5px 0;
+            font-size: 0.75rem;
+            color: #666;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
 
-<div class="header-actions">
-    <button class="theme-btn" id="themeToggle" onclick="toggleTheme()">🌙 Dark Mode</button>
-</div>
-
 <div class="app-container">
-    <div id="installApp" class="pwa-badge">📱 နှိပ်ပြီး ဖုန်းထဲမှာ App အဖြစ် သတ်မှတ်ရန်</div>
+    <div id="installApp" class="pwa-badge">📱 ဖုန်းထဲတွင် App အဖြစ် သတ်မှတ်ရန် နှိပ်ပါ</div>
 
     <div class="price-display-box">
-        <span>လက်ရှိ သတ်မှတ်စျေးနှုန်း:</span>
-        <span class="current-rate" id="currentRateDisplay">၅,၀၀၀ ကျပ်</span>
+        <span>လက်ရှိသတ်မှတ်စျေးနှုန်း:</span>
+        <span class="current-rate" id="currentRateDisplay">၅,၀၀၀</span>
+        <button class="edit-preset-toggle" onclick="toggleEditPanel()">⚙️</button>
     </div>
 
-    <div class="input-group">
-        <div class="input-label">လီတာ အရေအတွက် (Liters)</div>
-        <div class="input-row">
-            <input type="number" id="literInput" placeholder="0.000" step="0.001">
-            <span class="unit">Li</span>
+    <div class="preset-edit-panel" id="presetEditPanel">
+        <input type="number" id="p1" value="5000" oninput="updatePresetLabels()">
+        <input type="number" id="p2" value="5500" oninput="updatePresetLabels()">
+        <input type="number" id="p3" value="6000" oninput="updatePresetLabels()">
+        <input type="number" id="p4" value="6500" oninput="updatePresetLabels()">
+        <input type="number" id="p5" value="7000" oninput="updatePresetLabels()">
+        <input type="number" id="p6" value="7500" oninput="updatePresetLabels()">
+        <input type="number" id="p7" value="8000" oninput="updatePresetLabels()">
+    </div>
+
+    <div class="row-inputs">
+        <div class="input-group">
+            <div class="input-label">လီတာ အရေအတွက်</div>
+            <input type="number" id="literInput" placeholder="0.000" step="0.001" inputmode="decimal">
+        </div>
+        <div class="input-group">
+            <div class="input-label">သင့်ငွေ</div>
+            <input type="number" id="amountInput" placeholder="0" inputmode="decimal">
         </div>
     </div>
 
-    <div class="input-group">
-        <div class="input-label">သင့်ငွေ (Amount)</div>
-        <div class="input-row">
-            <input type="number" id="amountInput" placeholder="0">
-            <span class="unit">Ks</span>
+    <div class="input-label" style="margin-bottom: 4px; color: #444;">သတ်မှတ်ပြီးသား နှုန်းထားများ</div>
+    <div class="preset-grid" id="presetGrid">
+        <button class="preset-btn active" onclick="setPriceFromPreset(0, this)" id="btn_p1">5000</button>
+        <button class="preset-btn" onclick="setPriceFromPreset(1, this)" id="btn_p2">5500</button>
+        <button class="preset-btn" onclick="setPriceFromPreset(2, this)" id="btn_p3">6000</button>
+        <button class="preset-btn" onclick="setPriceFromPreset(3, this)" id="btn_p4">6500</button>
+        <button class="preset-btn" onclick="setPriceFromPreset(4, this)" id="btn_p5">7000</button>
+        <button class="preset-btn" onclick="setPriceFromPreset(5, this)" id="btn_p6">7500</button>
+        <button class="preset-btn" onclick="setPriceFromPreset(6, this)" id="btn_p7">8000</button>
+    </div>
+
+    <div class="custom-rate-row">
+        <div class="custom-rate-group">
+            <div class="input-label" style="color: #b8860b;">သတ်မှတ်ရန် (စိတ်ကြိုက် စျေးနှုန်း)</div>
+            <input type="number" id="customPriceInput" placeholder="ရိုက်ထည့်ပါ..." inputmode="decimal">
         </div>
+        <button class="qr-btn" id="qrToggleBtn" onclick="toggleQR()">QR</button>
     </div>
 
-    <div class="input-label" style="margin-bottom: 5px; color: var(--text-color);">သတ်မှတ်ပြီးသား နှုန်းထားများ</div>
-    <div class="preset-grid">
-        <button class="preset-btn active" onclick="setPrice(5000, this)">5000</button>
-        <button class="preset-btn" onclick="setPrice(5500, this)">5500</button>
-        <button class="preset-btn" onclick="setPrice(6000, this)">6000</button>
-        <button class="preset-btn" onclick="setPrice(6500, this)">6500</button>
-        <button class="preset-btn" onclick="setPrice(7000, this)">7000</button>
-        <button class="preset-btn" onclick="setPrice(7500, this)">7500</button>
-        <button class="preset-btn" onclick="setPrice(8000, this)">8000</button>
+    <button class="save-btn" onclick="saveToHistory()">မှတ်ထားမယ်</button>
+
+    <div class="history-section">
+        <div class="table-header">
+            <div>QR</div>
+            <div>လီတာ</div>
+            <div>သင့်ငွေ</div>
+            <div>အချိန်</div>
+        </div>
+        <div class="history-box" id="historyContainer"></div>
     </div>
 
-    <div class="custom-rate-group">
-        <div class="input-label" style="color: #b8860b;">သတ်မှတ်ရန် (စိတ်ကြိုက် စျေးနှုန်း)</div>
-        <input type="number" id="customPriceInput" placeholder="စျေးနှုန်း အသစ်ရိုက်ထည့်ပါ...">
-    </div>
-
-    <div class="action-grid">
-        <button class="action-btn clear-btn" onclick="clearInputs()">Clear</button>
-        <button class="action-btn save-btn" onclick="saveToHistory()">Save Data</button>
-    </div>
-
-    <div class="input-label" style="margin-bottom: 5px;">လတ်တလော မှတ်တမ်းများ</div>
-    <div class="history-box" id="historyContainer">
-        <div style="color:#888; text-align:center; padding-top:10px;">မှတ်တမ်းမရှိသေးပါ။</div>
-    </div>
+    <div class="brand-footer">
+        Calcu Note V1.0 </div>
 </div>
 
-<div class="brand-footer">
-    <div class="brand-text">TZLOM & Gemini</div>
+<div class="popup-overlay" id="popupOverlay">
+    <div class="popup-content">
+        <div class="popup-title">အချက်အလက် အသေးစိတ်</div>
+        <div id="popupDetails"></div>
+        <div class="popup-actions">
+            <button class="pop-btn pop-del" onclick="deleteCurrentItem()">ဖျက်မယ်</button>
+            <button class="pop-btn pop-close" onclick="closePopup()">ပိတ်ပါ</button>
+        </div>
+    </div>
 </div>
 
 <script>
     let activePrice = 5000;
+    let isQRActive = false;
+    let selectedItemIndex = null;
+    let presets = [5000, 5500, 6000, 6500, 7000, 7500, 8000];
+
     const literInput = document.getElementById('literInput');
     const amountInput = document.getElementById('amountInput');
     const customPriceInput = document.getElementById('customPriceInput');
     const currentRateDisplay = document.getElementById('currentRateDisplay');
     const historyContainer = document.getElementById('historyContainer');
+    const qrToggleBtn = document.getElementById('qrToggleBtn');
 
-    function setPrice(price, element) {
-        activePrice = price;
+    // LocalStorage မှ Preset များကို ပြန်ခေါ်ခြင်း
+    if(localStorage.getItem('calcu_presets')) {
+        presets = JSON.parse(localStorage.getItem('calcu_presets'));
+        presets.forEach((val, idx) => {
+            document.getElementById(`p${idx+1}`).value = val;
+            document.getElementById(`btn_p${idx+1}`).innerText = val;
+        });
+        activePrice = presets[0];
+        currentRateDisplay.innerText = activePrice.toLocaleString();
+    }
+
+    function toggleEditPanel() {
+        const panel = document.getElementById('presetEditPanel');
+        panel.style.display = panel.style.display === 'grid' ? 'none' : 'grid';
+    }
+
+    function updatePresetLabels() {
+        for(let i=0; i<7; i++) {
+            let val = parseFloat(document.getElementById(`p${i+1}`).value) || 0;
+            presets[i] = val;
+            document.getElementById(`btn_p${i+1}`).innerText = val;
+        }
+        localStorage.setItem('calcu_presets', JSON.stringify(presets));
+        // Active ဖြစ်နေတဲ့ ခလုတ်စျေးနှုန်းကိုပါ တစ်ပါတည်းပြောင်းလဲရန်
+        const activeBtn = document.querySelector('.preset-btn.active');
+        if(activeBtn) {
+            let activeIdx = Array.from(document.querySelectorAll('.preset-btn')).indexOf(activeBtn);
+            if(activeIdx !== -1) {
+                activePrice = presets[activeIdx];
+                currentRateDisplay.innerText = activePrice.toLocaleString();
+                recalculate('liter');
+            }
+        }
+    }
+
+    function setPriceFromPreset(index, element) {
+        activePrice = presets[index];
         customPriceInput.value = ''; 
-        currentRateDisplay.innerText = price.toLocaleString() + " ကျပ်";
+        currentRateDisplay.innerText = activePrice.toLocaleString();
         
         document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
         if(element) element.classList.add('active');
@@ -337,11 +463,20 @@
         recalculate('liter');
     }
 
+    function toggleQR() {
+        isQRActive = !isQRActive;
+        if(isQRActive) {
+            qrToggleBtn.classList.add('active');
+        } else {
+            qrToggleBtn.classList.remove('active');
+        }
+    }
+
     customPriceInput.addEventListener('input', () => {
         let val = parseFloat(customPriceInput.value);
         if (val > 0) {
             activePrice = val;
-            currentRateDisplay.innerText = val.toLocaleString() + " ကျပ်";
+            currentRateDisplay.innerText = val.toLocaleString();
             document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
             recalculate('liter');
         }
@@ -371,80 +506,109 @@
         }
     }
 
-    // New Function: Clear Inputs
-    function clearInputs() {
-        literInput.value = '';
-        amountInput.value = '';
-    }
-
-    // New Function: Dark/Light Mode Theme
-    function toggleTheme() {
-        const body = document.body;
-        const btn = document.getElementById('themeToggle');
-        if (body.getAttribute('data-theme') === 'dark') {
-            body.removeAttribute('data-theme');
-            btn.innerText = "🌙 Dark Mode";
-        } else {
-            body.setAttribute('data-theme', 'dark');
-            btn.innerText = "☀️ Light Mode";
-        }
-    }
-
-    // New Function: LocalStorage History Tracker
     function saveToHistory() {
         let lit = literInput.value;
         let amt = amountInput.value;
         if(!lit || !amt) return;
 
-        let history = JSON.parse(localStorage.getItem('fuel_history')) || [];
-        history.unshift({ liter: lit, amount: amt, rate: activePrice });
-        if(history.length > 5) history.pop(); // Keep only last 5 items
-        localStorage.setItem('fuel_history', JSON.stringify(history));
+        let now = new Date();
+        let timeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+
+        let history = JSON.parse(localStorage.getItem('calcu_history_v1')) || [];
+        history.unshift({
+            qr: isQRActive ? 'QR' : '-',
+            liter: parseFloat(lit).toFixed(3),
+            amount: Math.round(amt),
+            rate: activePrice,
+            time: timeStr,
+            timestamp: now.getTime()
+        });
+
+        localStorage.setItem('calcu_history_v1', JSON.stringify(history));
         renderHistory();
+        
+        // Input ကွက်များအား ရှင်းလင်းရန်
+        literInput.value = '';
+        amountInput.value = '';
     }
 
     function renderHistory() {
-        let history = JSON.parse(localStorage.getItem('fuel_history')) || [];
+        let history = JSON.parse(localStorage.getItem('calcu_history_v1')) || [];
+        
+        // ၂၄ နာရီကျော်သွားသော ဒေတာများကို အလိုအလျောက် စစ်ထုတ်ဖျက်ဆီးခြင်း
+        let nowTime = new Date().getTime();
+        history = history.filter(item => (nowTime - item.timestamp) < 24 * 60 * 60 * 1000);
+        localStorage.setItem('calcu_history_v1', JSON.stringify(history));
+
         if(history.length === 0) {
-            historyContainer.innerHTML = `<div style="color:#888; text-align:center; padding-top:10px;">မှတ်တမ်းမရှိသေးပါ။</div>`;
+            historyContainer.innerHTML = `<div style="color:#888; text-align:center; padding-top:20px; font-size:0.8rem;">မှတ်တမ်းမရှိသေးပါ။</div>`;
             return;
         }
-        historyContainer.innerHTML = history.map(item => `
-            <div class="history-item">
-                <span>${item.liter} Li @ ${item.rate} Ks</span>
-                <strong>${parseInt(item.amount).toLocaleString()} Ks</strong>
+
+        historyContainer.innerHTML = history.map((item, index) => `
+            <div class="history-item" onclick="showDetails(${index})">
+                <div style="color: ${item.qr === 'QR' ? '#007bff' : '#333'}; font-weight: bold;">${item.qr}</div>
+                <div>${item.liter}</div>
+                <div style="font-weight:600;">${parseInt(item.amount).toLocaleString()}</div>
+                <div style="color:#666; font-size:0.75rem;">${item.time}</div>
             </div>
         `).join('');
     }
 
-    // Load History on Start
+    function showDetails(index) {
+        let history = JSON.parse(localStorage.getItem('calcu_history_v1')) || [];
+        let item = history[index];
+        if(!item) return;
+
+        selectedItemIndex = index;
+        document.getElementById('popupDetails').innerHTML = `
+            <div class="popup-row"><span>စနစ် အမျိုးအစား:</span> <strong>${item.qr === 'QR' ? 'QR Code စနစ်' : 'ပုံမှန်စနစ်'}</strong></div>
+            <div class="popup-row"><span>လီတာ အရေအတွက်:</span> <strong>${item.liter} Li</strong></div>
+            <div class="popup-row"><span>သတ်မှတ်စျေးနှုန်း:</span> <strong>${item.rate.toLocaleString()} ကျပ်</strong></div>
+            <div class="popup-row"><span>သင့်ငွေ ပမာဏ:</span> <strong>${parseInt(item.amount).toLocaleString()} ကျပ်</strong></div>
+            <div class="popup-row"><span>မှတ်တမ်းတင်ချိန်:</span> <strong>${item.time}</strong></div>
+        `;
+        document.getElementById('popupOverlay').style.display = 'flex';
+    }
+
+    function closePopup() {
+        document.getElementById('popupOverlay').style.display = 'none';
+        selectedItemIndex = null;
+    }
+
+    function deleteCurrentItem() {
+        if(selectedItemIndex === null) return;
+        let history = JSON.parse(localStorage.getItem('calcu_history_v1')) || [];
+        history.splice(selectedItemIndex, 1);
+        localStorage.setItem('calcu_history_v1', JSON.stringify(history));
+        renderHistory();
+        closePopup();
+    }
+
+    // စတင်ချိန်တွင် မှတ်တမ်းအားဆွဲတင်ရန်
     window.onload = () => { renderHistory(); };
 
-    // PWA Service Worker Registration
+    // PWA Service Worker စနစ်
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js')
-            .then(reg => console.log('Service Worker Registered'))
-            .catch(err => console.log('Service Worker Failed', err));
+            .then(reg => console.log('PWA Ready'))
+            .catch(err => console.log('PWA Failed', err));
         });
     }
 
     let deferredPrompt;
     const installBtn = document.getElementById('installApp');
-
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
         installBtn.style.display = 'block'; 
     });
-
     installBtn.addEventListener('click', () => {
         if (deferredPrompt) {
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    installBtn.style.display = 'none';
-                }
+                if (choiceResult.outcome === 'accepted') installBtn.style.display = 'none';
                 deferredPrompt = null;
             });
         }
