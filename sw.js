@@ -1,8 +1,8 @@
-// ဗားရှင်း နာမည်ကို v1 ကနေ v2 ပြောင်းပေးခြင်းဖြင့် ဖုန်းကို အသစ်လဲခိုင်းတာ ဖြစ်ပါတယ်
-const CACHE_NAME = 'converter-v2'; 
+const CACHE_NAME = 'calcu-note-v1';
 const ASSETS = [
   'index.html',
-  'manifest.json'
+  'manifest.json',
+  'icon.png'
 ];
 
 self.addEventListener('install', (e) => {
@@ -11,29 +11,12 @@ self.addEventListener('install', (e) => {
       return cache.addAll(ASSETS);
     })
   );
-  // ဖိုင်အသစ်တွေကို ချက်ချင်း အသက်ဝင်စေရန်
-  self.skipWaiting(); 
-});
-
-self.addEventListener('activate', (e) => {
-  e.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            // Cache အဟောင်းတွေကို အလိုအလျောက် ဖျက်ပစ်ခြင်း
-            return caches.delete(key); 
-          }
-        })
-      );
-    })
-  );
 });
 
 self.addEventListener('fetch', (e) => {
   e.respondWith(
-    caches.match(e.request).then((response) => {
-      return response || fetch(e.request);
+    caches.match(e.request).then((res) => {
+      return res || fetch(e.request);
     })
   );
 });
