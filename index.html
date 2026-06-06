@@ -306,7 +306,6 @@
         .pop-del { background: #dc3545; color: white; }
         .pop-close { background: #e0e0e0; color: #333; }
 
-        /* စတိုင်ကျသော ရေစာ (Watermark) ပုံစံ Footer */
         .brand-footer {
             text-align: center;
             padding: 20px 0 5px 0;
@@ -585,9 +584,10 @@
 
     window.onload = () => { renderHistory(); };
 
+    // Service Worker မှတ်ပုံတင်ခြင်း
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js')
+            navigator.serviceWorker.register('./sw.js')
             .then(reg => console.log('PWA Ready'))
             .catch(err => console.log('PWA Failed', err));
         });
